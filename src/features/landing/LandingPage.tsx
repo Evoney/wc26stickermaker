@@ -5,7 +5,7 @@ import { useAuth } from '../auth/useAuth';
 const benefits = [
   {
     icon: Sticker,
-    title: 'Personalize em minutos',
+    title: 'Personalize em poucos cliques',
     description: 'Envie sua foto, ajuste nome, time e dados e gere uma figurinha pronta para publicar.',
   },
   {
@@ -16,14 +16,14 @@ const benefits = [
   {
     icon: Download,
     title: 'Compartilhe em qualquer canal',
-    description: 'Baixe em PNG ou SVG e publique onde o seu público já está engajado.',
+    description: 'Baixe a imagem e compartilhe onde quiser.',
   },
 ];
 
 const steps = [
   'Escolha sua foto e seus dados',
   'Ajuste o estilo da figurinha',
-  'Baixe e compartilhe com o público',
+  'Baixe e compartilhe sua peça personalizada',
 ];
 
 export function LandingPage() {
@@ -61,9 +61,9 @@ export function LandingPage() {
             <div className="flex items-center gap-4">
               <img src="/icon.png" alt="WC 2026 Sticker Maker" className="h-14 w-auto" />
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#FFD700]/80">WC26 Studio</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#FFD700]/80">WC26 Sticker Maker</p>
                 <h1 className="text-xl font-black uppercase tracking-[-0.06em] text-white sm:text-2xl">
-                  Sticker Maker
+                  Sticker Studio
                 </h1>
               </div>
             </div>
@@ -71,6 +71,7 @@ export function LandingPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
+              style={{ cursor: (loading || configError) ? 'not-allowed' : 'pointer' }}
               disabled={loading || Boolean(configError)}
               className="hidden rounded-full border border-white/15 bg-white/5 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.22em] text-white transition hover:bg-white/10 md:block disabled:cursor-not-allowed disabled:opacity-55"
             >
@@ -82,20 +83,21 @@ export function LandingPage() {
             <section className="relative lg:pl-14">
               <div className="max-w-3xl">
                 <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.34em] text-[#FFD700]/82">
-                  Plataforma pronta para publicar
+                  Crie e compartilhe suas figurinhas em minutos
                 </p>
                 <h2 className="max-w-5xl text-5xl font-black uppercase leading-[0.9] tracking-[-0.08em] text-white sm:text-6xl lg:text-7xl">
-                  Transforme a sua audiência em colecionadores da sua figurinha.
+                  Colecione suas figurinhas da copa do mundo 2026.
                 </h2>
                 <p className="mt-6 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
                   Crie figurinhas com visual oficial, acabamento especial e compartilhamento imediato para
-                  creators, atletas, marcas e ativações digitais.
+                  redes sociais.
                 </p>
               </div>
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <button
                   type="button"
+                  style={{ cursor: (loading || configError) ? 'not-allowed' : 'pointer' }}
                   onClick={handleGoogleLogin}
                   disabled={loading || Boolean(configError)}
                   className="inline-flex items-center gap-3 rounded-full bg-[#FFD700] px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#002B5B] transition hover:bg-[#ffe066] disabled:cursor-not-allowed disabled:opacity-55"
@@ -109,6 +111,7 @@ export function LandingPage() {
 
                 <button
                   type="button"
+                  style={{ cursor: (loading || configError) ? 'not-allowed' : 'pointer' }}
                   onClick={handleGoogleLogin}
                   disabled={loading || Boolean(configError)}
                   className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-4 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-55"
@@ -145,15 +148,14 @@ export function LandingPage() {
                       Plataforma criativa
                     </p>
                     <h3 className="mt-4 text-3xl font-black uppercase tracking-[-0.06em]">
-                      Uma experiência de criação com cara de produto.
+                      Uma experiência de criação única.
                     </h3>
                   </div>
                   <img src="/icon.png" alt="WC 2026 Sticker Maker" className="hidden h-16 w-auto sm:block" />
                 </div>
 
                 <p className="mt-5 max-w-md text-sm leading-6 text-white/72">
-                  Centralize criação, acabamento e distribuição em um fluxo simples para transformar ideias em
-                  peças prontas para publicação.
+                  Entre no clima da Copa do Mundo de 2026.
                 </p>
 
                 <div className="mt-8 space-y-4 border-t border-white/10 pt-6">
@@ -173,7 +175,7 @@ export function LandingPage() {
                 <div className="mt-8 border border-white/10 bg-white/5 p-5">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">Resultado final</p>
                   <p className="mt-2 text-lg font-black uppercase tracking-[-0.04em]">
-                    Visual premium, distribuição imediata
+                    Visual premium, figurinha pronta para compartilhar e colecionar.
                   </p>
                 </div>
               </div>
@@ -183,17 +185,18 @@ export function LandingPage() {
           <section className="border-t border-white/10 py-8">
             <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
               <div className="max-w-2xl">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#FFD700]/82">Pronto para lançar</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#FFD700]/82">Pronto para compartilhar</p>
                 <h3 className="mt-3 text-3xl font-black uppercase tracking-[-0.06em] text-white sm:text-4xl">
-                  Publique sua primeira figurinha com um clique.
+                  Crie sua primeira figurinha com um clique.
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-white/68 sm:text-base">
-                  Entre agora, personalize a peça e coloque sua figurinha em circulação ainda hoje.
+                  Entre agora, personalize a figurinha da sua maneira.
                 </p>
               </div>
 
               <button
                 type="button"
+                style={{ cursor: (loading || configError) ? 'not-allowed' : 'pointer' }} 
                 onClick={handleGoogleLogin}
                 disabled={loading || Boolean(configError)}
                 className="inline-flex items-center gap-3 rounded-full bg-[#FFD700] px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#002B5B] transition hover:bg-[#ffe066] disabled:cursor-not-allowed disabled:opacity-55"
