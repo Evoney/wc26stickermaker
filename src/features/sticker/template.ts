@@ -195,7 +195,7 @@ function extractDefs(svgMarkup: string) {
 }
 
 function extractLayer(svgMarkup: string) {
-  const match = svgMarkup.match(/<g id="Camada_x0020_1">[\s\S]*<\/g>\s*<\/svg>\s*$/);
+  const match = svgMarkup.match(/<g id="Camada_x0020_1">[\s\S]*<\/g>\s*(?=<\/svg>\s*$)/);
   return match?.[0] ?? '';
 }
 

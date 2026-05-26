@@ -1,10 +1,9 @@
-import { Download, FileImage, RotateCcw, Share2 } from 'lucide-react';
+import { Download, RotateCcw, Share2 } from 'lucide-react';
 
 type StickerActionsProps = {
   exporting: boolean;
   canShare: boolean;
   onDownloadPng: () => void;
-  onDownloadSvg: () => void;
   onShare: () => void;
   onReset: () => void;
 };
@@ -13,7 +12,6 @@ export function StickerActions({
   exporting,
   canShare,
   onDownloadPng,
-  onDownloadSvg,
   onShare,
   onReset,
 }: StickerActionsProps) {
@@ -40,16 +38,7 @@ export function StickerActions({
         </button>
       ) : null}
 
-      <div className="grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          onClick={onDownloadSvg}
-          className="flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 font-bold text-white transition-all hover:bg-white/20"
-        >
-          <FileImage size={18} />
-          SVG
-        </button>
-
+      <div className="grid grid-cols-1 gap-3">
         <button
           type="button"
           onClick={onReset}

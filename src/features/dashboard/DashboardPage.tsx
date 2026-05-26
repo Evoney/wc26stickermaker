@@ -7,7 +7,7 @@ import { StickerPreview } from '../sticker/components/StickerPreview';
 import { DEFAULT_STICKER_DATA } from '../sticker/defaults';
 import { buildStickerSvg } from '../sticker/template';
 import type { StickerData } from '../sticker/types';
-import { downloadStickerPng, downloadStickerSvg, shareStickerPng } from '../sticker/utils/export';
+import { downloadStickerPng, shareStickerPng } from '../sticker/utils/export';
 import { useAuth } from '../auth/useAuth';
 
 export function DashboardPage() {
@@ -39,23 +39,28 @@ export function DashboardPage() {
     [sticker.name],
   );
 
+  const getErrorMessage = (error: unknown, fallback: string) =>
+    error instanceof Error && error.message ? error.message : fallback;
+
   const exportPng = async () => {
     setIsExporting(true);
     try {
       await downloadStickerPng(svgMarkup, `${baseFilename}.png`);
+    } catch (error) {
+      console.error('Falha ao exportar PNG.', error);
+      alert(getErrorMessage(error, 'Nao foi possivel baixar a imagem agora.'));
     } finally {
       setIsExporting(false);
     }
-  };
-
-  const exportSvg = () => {
-    downloadStickerSvg(svgMarkup, `${baseFilename}.svg`);
   };
 
   const sharePng = async () => {
     setIsExporting(true);
     try {
       await shareStickerPng(svgMarkup, `${baseFilename}.png`);
+    } catch (error) {
+      console.error('Falha ao compartilhar PNG.', error);
+      alert(getErrorMessage(error, 'Nao foi possivel compartilhar a imagem agora.'));
     } finally {
       setIsExporting(false);
     }
@@ -106,7 +111,6 @@ export function DashboardPage() {
               exporting={isExporting}
               canShare={canShare}
               onDownloadPng={exportPng}
-              onDownloadSvg={exportSvg}
               onShare={sharePng}
               onReset={handleReset}
             />
