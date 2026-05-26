@@ -97,8 +97,7 @@ function buildPhotoLayer(imageDataUrl: string | null) {
 
   const placeholderLayer = `
   <g id="player-photo-layer">
-   <rect x="${PHOTO_FRAME.x}" y="${PHOTO_FRAME.y}" width="${PHOTO_FRAME.width}" height="${PHOTO_FRAME.height}" fill="#1E8D97" />
-   <rect x="${PHOTO_FRAME.x}" y="${PHOTO_FRAME.y}" width="${PHOTO_FRAME.width}" height="${PHOTO_FRAME.height}" fill="url(#player-photo-placeholder)" opacity="0.55" />
+   <rect x="${PHOTO_FRAME.x}" y="${PHOTO_FRAME.y}" width="${PHOTO_FRAME.width}" height="${PHOTO_FRAME.height}" fill="none" />
    <text x="${PHOTO_FRAME.x + PHOTO_FRAME.width / 2}" y="${PHOTO_FRAME.y + PHOTO_FRAME.height / 2}" text-anchor="middle" class="fil21" style="font-size:168px;font-family:'Montserrat Medium';letter-spacing:20px">ADICIONE UMA FOTO</text>
   </g>`;
 
@@ -112,7 +111,7 @@ function buildPhotoLayer(imageDataUrl: string | null) {
     defs: photoClipDef,
     layer: `
   <g id="player-photo-layer">
-   <rect x="${PHOTO_FRAME.x}" y="${PHOTO_FRAME.y}" width="${PHOTO_FRAME.width}" height="${PHOTO_FRAME.height}" fill="#1E8D97" />
+   <rect x="${PHOTO_FRAME.x}" y="${PHOTO_FRAME.y}" width="${PHOTO_FRAME.width}" height="${PHOTO_FRAME.height}" fill="none" />
    <image
     x="${PHOTO_FRAME.x}"
     y="${PHOTO_FRAME.y}"
