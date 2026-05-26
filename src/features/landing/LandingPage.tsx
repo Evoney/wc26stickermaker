@@ -71,7 +71,7 @@ export function LandingPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              style={{ cursor: (loading || configError) ? 'not-allowed' : 'pointer' }}
+              style={{ cursor: 'pointer' }}
               disabled={loading || Boolean(configError)}
               className="hidden rounded-full border border-white/15 bg-white/5 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.22em] text-white transition hover:bg-white/10 md:block disabled:cursor-not-allowed disabled:opacity-55"
             >
@@ -97,7 +97,7 @@ export function LandingPage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <button
                   type="button"
-                  style={{ cursor: (loading || configError) ? 'not-allowed' : 'pointer' }}
+                  style={{ cursor: 'pointer' }}
                   onClick={handleGoogleLogin}
                   disabled={loading || Boolean(configError)}
                   className="inline-flex items-center gap-3 rounded-full bg-[#FFD700] px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#002B5B] transition hover:bg-[#ffe066] disabled:cursor-not-allowed disabled:opacity-55"
@@ -111,7 +111,7 @@ export function LandingPage() {
 
                 <button
                   type="button"
-                  style={{ cursor: (loading || configError) ? 'not-allowed' : 'pointer' }}
+                  style={{ cursor: 'pointer' }}
                   onClick={handleGoogleLogin}
                   disabled={loading || Boolean(configError)}
                   className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-4 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-55"
@@ -196,7 +196,7 @@ export function LandingPage() {
 
               <button
                 type="button"
-                style={{ cursor: (loading || configError) ? 'not-allowed' : 'pointer' }} 
+                style={{ cursor: 'pointer' }} 
                 onClick={handleGoogleLogin}
                 disabled={loading || Boolean(configError)}
                 className="inline-flex items-center gap-3 rounded-full bg-[#FFD700] px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#002B5B] transition hover:bg-[#ffe066] disabled:cursor-not-allowed disabled:opacity-55"
