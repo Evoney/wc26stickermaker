@@ -21,7 +21,8 @@ function getSvgDimensions(svgMarkup: string) {
   const heightMatch = svgMarkup.match(/height="([\d.]+)(px|mm)?"/i);
 
   if (widthMatch && heightMatch) {
-    const toPixels = (value: number, unit?: string) => (unit === 'mm' ? value * 3.7795275591 : value);
+    const toPixels = (value: number, unit?: string) =>
+      unit === 'mm' ? value * 3.7795275591 : value;
 
     return {
       width: toPixels(Number(widthMatch[1]), widthMatch[2]),
@@ -29,30 +30,53 @@ function getSvgDimensions(svgMarkup: string) {
     };
   }
 
-  throw new Error('Nao foi possivel determinar o tamanho do SVG.');
+  throw new Error('Não foi possível determinar o tamanho do SVG.');
 }
 
-async function renderStickerPngBlob(svgMarkup: string) {
-  const svgBlob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+function normalizeSvgForMobile(svgMarkup: string): string {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svgMarkup, 'image/svg+xml');
+  const svgEl = doc.documentElement;
+
+  if (!svgEl.getAttribute('xmlns')) {
+    svgEl.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  }
+
+  if (!svgEl.getAttribute('width') || !svgEl.getAttribute('height')) {
+    const { width, height } = getSvgDimensions(svgMarkup);
+    svgEl.setAttribute('width', String(width));
+    svgEl.setAttribute('height', String(height));
+  }
+
+  return new XMLSerializer().serializeToString(doc);
+}
+
+async function renderStickerPngBlob(svgMarkup: string): Promise<Blob> {
+  const normalized = normalizeSvgForMobile(svgMarkup);
+  const { width, height } = getSvgDimensions(normalized);
+
+  const scale = Math.min(window.devicePixelRatio ?? 2, 3);
+
+  const svgBlob = new Blob([normalized], { type: 'image/svg+xml;charset=utf-8' });
   const svgUrl = URL.createObjectURL(svgBlob);
-  const { width, height } = getSvgDimensions(svgMarkup);
 
   try {
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image();
+      img.width = Math.round(width);
+      img.height = Math.round(height);
       img.onload = () => resolve(img);
       img.onerror = () => reject(new Error('Falha ao processar o template SVG.'));
       img.src = svgUrl;
     });
 
     const canvas = document.createElement('canvas');
-    const scale = 2;
     canvas.width = Math.round(width * scale);
     canvas.height = Math.round(height * scale);
 
     const context = canvas.getContext('2d');
     if (!context) {
-      throw new Error('Canvas 2D indisponivel neste navegador.');
+      throw new Error('Canvas 2D indisponível neste navegador.');
     }
 
     context.setTransform(scale, 0, 0, scale, 0, 0);
@@ -82,16 +106,37 @@ export function downloadStickerSvg(svgMarkup: string, filename: string) {
 export async function downloadStickerPng(svgMarkup: string, filename: string) {
   const blob = await renderStickerPngBlob(svgMarkup);
   const url = URL.createObjectURL(blob);
-  triggerDownload(url, filename);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.style.display = 'none';
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isSafari) {
+    window.open(url, '_blank');
+  }
+
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
 export async function shareStickerPng(svgMarkup: string, filename: string) {
   const blob = await renderStickerPngBlob(svgMarkup);
   const file = new File([blob], filename, { type: 'image/png' });
 
-  if (!navigator.share || !navigator.canShare?.({ files: [file] })) {
-    throw new Error('Compartilhamento de arquivos nao suportado neste navegador.');
+  const canShare =
+    typeof navigator.share === 'function' &&
+    typeof navigator.canShare === 'function' &&
+    navigator.canShare({ files: [file] });
+
+  if (!canShare) {
+    const url = URL.createObjectURL(blob);
+    triggerDownload(url, filename);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    return;
   }
 
   await navigator.share({
