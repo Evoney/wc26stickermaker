@@ -54,46 +54,61 @@ function normalizeSvgForMobile(svgMarkup: string): string {
 async function renderStickerPngBlob(svgMarkup: string): Promise<Blob> {
   const normalized = normalizeSvgForMobile(svgMarkup);
   const { width, height } = getSvgDimensions(normalized);
-
   const scale = Math.min(window.devicePixelRatio ?? 2, 3);
 
-  const svgBlob = new Blob([normalized], { type: 'image/svg+xml;charset=utf-8' });
-  const svgUrl = URL.createObjectURL(svgBlob);
+  const svgBase64 = btoa(unescape(encodeURIComponent(normalized)));
+  const svgDataUrl = `data:image/svg+xml;base64,${svgBase64}`;
 
-  try {
-    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const img = new Image();
-      img.width = Math.round(width);
-      img.height = Math.round(height);
-      img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error('Falha ao processar o template SVG.'));
-      img.src = svgUrl;
-    });
+  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.width = Math.round(width);
+    img.height = Math.round(height);
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('Falha ao processar o template SVG.'));
+    img.src = svgDataUrl;
+  });
 
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(width * scale);
-    canvas.height = Math.round(height * scale);
+  const canvas = document.createElement('canvas');
 
-    const context = canvas.getContext('2d');
-    if (!context) {
-      throw new Error('Canvas 2D indisponível neste navegador.');
-    }
+  const MAX_PIXELS = 16_000_000;
+  const rawW = Math.round(width * scale);
+  const rawH = Math.round(height * scale);
+  const finalScale =
+    rawW * rawH > MAX_PIXELS
+      ? Math.sqrt(MAX_PIXELS / (width * height))
+      : scale;
 
-    context.setTransform(scale, 0, 0, scale, 0, 0);
-    context.drawImage(image, 0, 0, width, height);
+  canvas.width = Math.round(width * finalScale);
+  canvas.height = Math.round(height * finalScale);
 
-    const blob = await new Promise<Blob | null>((resolve) => {
-      canvas.toBlob(resolve, 'image/png');
-    });
-
-    if (!blob) {
-      throw new Error('Falha ao gerar o PNG.');
-    }
-
-    return blob;
-  } finally {
-    URL.revokeObjectURL(svgUrl);
+  const context = canvas.getContext('2d');
+  if (!context) {
+    throw new Error('Canvas 2D indisponível neste navegador.');
   }
+
+  context.setTransform(finalScale, 0, 0, finalScale, 0, 0);
+  context.drawImage(image, 0, 0, width, height);
+
+  const blob = await new Promise<Blob | null>((resolve) => {
+    canvas.toBlob(resolve, 'image/png');
+  });
+
+  if (blob) return blob;
+
+  // Retry: reduz o canvas pela metade e tenta de novo
+  const fallbackCanvas = document.createElement('canvas');
+  fallbackCanvas.width = Math.round(canvas.width / 2);
+  fallbackCanvas.height = Math.round(canvas.height / 2);
+  const fbCtx = fallbackCanvas.getContext('2d');
+  if (!fbCtx) throw new Error('Canvas 2D indisponível neste navegador.');
+  fbCtx.drawImage(canvas, 0, 0, fallbackCanvas.width, fallbackCanvas.height);
+
+  const fallbackBlob = await new Promise<Blob | null>((resolve) => {
+    fallbackCanvas.toBlob(resolve, 'image/png');
+  });
+
+  if (!fallbackBlob) throw new Error('Falha ao gerar o PNG.');
+  return fallbackBlob;
 }
 
 export function downloadStickerSvg(svgMarkup: string, filename: string) {
