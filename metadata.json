@@ -1,0 +1,6 @@
+{
+  "name": "Copa 2026 Sticker Maker",
+  "description": "Create customizable 2026 World Cup style stickers with your photo and details.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
